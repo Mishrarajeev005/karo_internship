@@ -1,0 +1,16 @@
+/* App.css - Admin panel responsive overrides */
+
+/* Hide welcome text on small screens */
+@media (max-width: 480px) {
+  .admin-welcome-text {
+    display: none !important;
+  }
+}
+
+/* Admin table responsive scroll */
+@media (max-width: 768px) {
+  .admin-table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
