@@ -19,14 +19,14 @@ public class DataSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Seed default admin
-        if (adminRepository.count() == 0) {
+        // Seed default admin if not present
+        if (!adminRepository.findByUsername("admin").isPresent()) {
             Admin admin = new Admin();
             admin.setUsername("admin");
             admin.setPassword("admin123");
             admin.setName("KaroStartup Admin");
             adminRepository.save(admin);
-            System.out.println("✅ DataSeeder: Default admin created (admin / admin123)");
+            System.out.println("✅ DataSeeder: Admin user 'admin' created.");
         }
 
         if (internshipRepository.count() == 0) {
