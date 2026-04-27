@@ -22,6 +22,7 @@ public class AdminController {
     public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
         String username = credentials.get("username");
         String password = credentials.get("password");
+        System.out.println("DEBUG: Login attempt for username: " + username);
 
         Optional<Admin> adminOpt = adminRepository.findByUsername(username);
         if (adminOpt.isPresent() && adminOpt.get().getPassword().equals(password)) {
