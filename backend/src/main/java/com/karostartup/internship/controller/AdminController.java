@@ -25,12 +25,18 @@ public class AdminController {
         System.out.println("DEBUG: Login attempt for username: " + username);
 
         Optional<Admin> adminOpt = adminRepository.findByUsername(username);
-        if (adminOpt.isPresent() && adminOpt.get().getPassword().equals(password)) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("success", true);
-            response.put("message", "Login successful");
-            response.put("admin", adminOpt.get());
-            return ResponseEntity.ok(response);
+        if (adminOpt.isPresent()) {
+            Admin dbAdmin = adminOpt.get();
+            System.out.println("DEBUG: User found in DB. Passwords match? " + dbAdmin.getPassword().equals(password));
+            if (dbAdmin.getPassword().equals(password)) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", true);
+                response.put("message", "Login successful");
+                response.put("admin", dbAdmin);
+                return ResponseEntity.ok(response);
+            }
+        } else {
+            System.out.println("DEBUG: No admin user found in database with username: " + username);
         }
 
         Map<String, Object> response = new HashMap<>();
