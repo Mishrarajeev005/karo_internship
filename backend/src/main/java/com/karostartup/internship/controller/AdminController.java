@@ -20,10 +20,10 @@ public class AdminController {
     // Login endpoint
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
-        String email = credentials.get("email");
+        String username = credentials.get("username");
         String password = credentials.get("password");
 
-        Optional<Admin> adminOpt = adminRepository.findByEmail(email);
+        Optional<Admin> adminOpt = adminRepository.findByUsername(username);
         if (adminOpt.isPresent() && adminOpt.get().getPassword().equals(password)) {
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
@@ -34,23 +34,23 @@ public class AdminController {
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", false);
-        response.put("message", "Invalid email or password");
+        response.put("message", "Invalid username or password");
         return ResponseEntity.status(401).body(response);
     }
 
     // Verify admin exists (for forgot password)
-    @PostMapping("/verify-email")
-    public ResponseEntity<?> verifyEmail(@RequestBody Map<String, String> body) {
-        String email = body.get("email");
-        Optional<Admin> adminOpt = adminRepository.findByEmail(email);
+    @PostMapping("/verify-username")
+    public ResponseEntity<?> verifyUsername(@RequestBody Map<String, String> body) {
+        String username = body.get("username");
+        Optional<Admin> adminOpt = adminRepository.findByUsername(username);
 
         Map<String, Object> response = new HashMap<>();
         if (adminOpt.isPresent()) {
             response.put("success", true);
-            response.put("message", "Email verified. You can now reset your password.");
+            response.put("message", "Username verified. You can now reset your password.");
         } else {
             response.put("success", false);
-            response.put("message", "No admin account found with this email.");
+            response.put("message", "No admin account found with this username.");
         }
         return ResponseEntity.ok(response);
     }
@@ -58,10 +58,10 @@ public class AdminController {
     // Reset password
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> body) {
-        String email = body.get("email");
+        String username = body.get("username");
         String newPassword = body.get("newPassword");
 
-        Optional<Admin> adminOpt = adminRepository.findByEmail(email);
+        Optional<Admin> adminOpt = adminRepository.findByUsername(username);
         Map<String, Object> response = new HashMap<>();
 
         if (adminOpt.isPresent()) {

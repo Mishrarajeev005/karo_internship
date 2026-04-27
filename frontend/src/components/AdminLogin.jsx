@@ -4,7 +4,7 @@ import api from '../api';
 import logo from '../assets/logo.png';
 
 const AdminLogin = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -15,17 +15,17 @@ const AdminLogin = () => {
     setError('');
     setLoading(true);
     try {
-      const res = await api.post('/admin/login', { email, password });
+      const res = await api.post('/admin/login', { username, password });
       if (res.data.success) {
         localStorage.setItem('adminLoggedIn', 'true');
         localStorage.setItem('adminName', res.data.admin.name);
-        localStorage.setItem('adminEmail', res.data.admin.email);
+        localStorage.setItem('adminUsername', res.data.admin.username);
         navigate('/admin/dashboard');
       } else {
         setError(res.data.message);
       }
     } catch (err) {
-      setError('Invalid email or password');
+      setError('Invalid username or password');
     } finally {
       setLoading(false);
     }
@@ -71,13 +71,13 @@ const AdminLogin = () => {
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            <label style={{ fontWeight: '600', fontSize: '0.85rem', color: '#333' }}>Email</label>
+            <label style={{ fontWeight: '600', fontSize: '0.85rem', color: '#333' }}>Username</label>
             <input
-              type="email"
+              type="text"
               required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@karostartup.com"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Enter admin username"
               className="nav-pill"
               style={{ width: '100%', borderRadius: '0.75rem', padding: '0.75rem 1rem' }}
             />

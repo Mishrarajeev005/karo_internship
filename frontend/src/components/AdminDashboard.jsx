@@ -42,7 +42,7 @@ const AdminDashboard = () => {
   const handleLogout = () => {
     localStorage.removeItem('adminLoggedIn');
     localStorage.removeItem('adminName');
-    localStorage.removeItem('adminEmail');
+    localStorage.removeItem('adminUsername');
     navigate('/admin');
   };
 

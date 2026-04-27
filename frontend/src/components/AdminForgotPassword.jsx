@@ -4,8 +4,8 @@ import api from '../api';
 import logo from '../assets/logo.png';
 
 const AdminForgotPassword = () => {
-  const [step, setStep] = useState(1); // 1 = verify email, 2 = set new password
-  const [email, setEmail] = useState('');
+  const [step, setStep] = useState(1); // 1 = verify username, 2 = set new password
+  const [username, setUsername] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -13,16 +13,16 @@ const AdminForgotPassword = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleVerifyEmail = async (e) => {
+  const handleVerifyUsername = async (e) => {
     e.preventDefault();
     setError('');
     setMessage('');
     setLoading(true);
     try {
-      const res = await api.post('/admin/verify-email', { email });
+      const res = await api.post('/admin/verify-username', { username });
       if (res.data.success) {
         setStep(2);
-        setMessage('Email verified! Set your new password below.');
+        setMessage('Username verified! Set your new password below.');
       } else {
         setError(res.data.message);
       }
@@ -50,7 +50,7 @@ const AdminForgotPassword = () => {
 
     setLoading(true);
     try {
-      const res = await api.post('/admin/reset-password', { email, newPassword });
+      const res = await api.post('/admin/reset-password', { username, newPassword });
       if (res.data.success) {
         setMessage('Password reset successfully! Redirecting to login...');
         setTimeout(() => navigate('/admin'), 2000);
@@ -88,7 +88,7 @@ const AdminForgotPassword = () => {
             {step === 1 ? 'Forgot Password' : 'Set Password'}
           </h2>
           <p style={{ color: '#555', fontSize: '0.9rem' }}>
-            {step === 1 ? 'Verify your admin email' : 'Create a new password'}
+            {step === 1 ? 'Verify your admin username' : 'Create a new password'}
           </p>
         </div>
 
@@ -121,15 +121,15 @@ const AdminForgotPassword = () => {
         )}
 
         {step === 1 ? (
-          <form onSubmit={handleVerifyEmail} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          <form onSubmit={handleVerifyUsername} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label style={{ fontWeight: '600', fontSize: '0.85rem', color: '#333' }}>Admin Email</label>
+              <label style={{ fontWeight: '600', fontSize: '0.85rem', color: '#333' }}>Admin Username</label>
               <input
-                type="email"
+                type="text"
                 required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@karostartup.com"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Enter admin username"
                 className="nav-pill"
                 style={{ width: '100%', borderRadius: '0.75rem', padding: '0.75rem 1rem' }}
               />
@@ -140,7 +140,7 @@ const AdminForgotPassword = () => {
               className="btn btn-primary"
               style={{ width: '100%', marginTop: '0.5rem', padding: '0.85rem' }}
             >
-              {loading ? 'Verifying...' : 'Verify Email'}
+              {loading ? 'Verifying...' : 'Verify Username'}
             </button>
           </form>
         ) : (

@@ -1,7 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import techflit from '../assets/partners/techflit.png';
+import eduvibe from '../assets/partners/eduvibe.png';
+import greenroot from '../assets/partners/greenroot.png';
+import healthsync from '../assets/partners/healthsync.png';
 
 function LandingPage() {
+  const partners = [
+    { name: 'TechFlit', logo: techflit },
+    { name: 'EduVibe', logo: eduvibe },
+    { name: 'GreenRoot', logo: greenroot },
+    { name: 'HealthSync', logo: healthsync },
+  ];
+
   return (
     <main className="container">
       <section className="hero">
@@ -14,6 +25,20 @@ function LandingPage() {
         </p>
         <div className="hero-actions">
           <Link to="/internships" className="btn btn-primary">Browse Internships</Link>
+        </div>
+      </section>
+
+      <section className="partners">
+        <h2>Top Startups <span className="text-gradient">Hiring With Us</span></h2>
+        <div className="partners-grid">
+          {partners.map((partner, index) => (
+            <div key={index} className="partner-item">
+              <div className="partner-logo-container">
+                <img src={partner.logo} alt={partner.name} className="partner-logo" />
+              </div>
+              <span className="partner-name">{partner.name}</span>
+            </div>
+          ))}
         </div>
       </section>
 

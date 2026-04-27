@@ -22,11 +22,11 @@ public class DataSeeder implements CommandLineRunner {
         // Seed default admin
         if (adminRepository.count() == 0) {
             Admin admin = new Admin();
-            admin.setEmail("admin@karostartup.com");
+            admin.setUsername("admin");
             admin.setPassword("admin123");
             admin.setName("KaroStartup Admin");
             adminRepository.save(admin);
-            System.out.println("✅ DataSeeder: Default admin created (admin@karostartup.com / admin123)");
+            System.out.println("✅ DataSeeder: Default admin created (admin / admin123)");
         }
 
         if (internshipRepository.count() == 0) {
