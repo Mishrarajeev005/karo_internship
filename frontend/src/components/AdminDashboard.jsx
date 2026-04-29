@@ -69,6 +69,16 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleDeleteApplication = async (id, studentName) => {
+    if (!window.confirm(`Are you sure you want to delete the application from "${studentName}"?`)) return;
+    try {
+      await api.delete(`/applications/${id}`);
+      setApplications(applications.filter(app => app.id !== id));
+    } catch (error) {
+      alert('Failed to delete application');
+    }
+  };
+
   const tabStyle = (tab) => ({
     padding: '0.75rem 1.5rem',
     borderRadius: '9999px',
@@ -228,6 +238,7 @@ const AdminDashboard = () => {
                         <th style={{ padding: '1.25rem', fontWeight: '600', color: '#333', borderBottom: '1px solid #eee' }}>Resume</th>
                         <th style={{ padding: '1.25rem', fontWeight: '600', color: '#333', borderBottom: '1px solid #eee' }}>LinkedIn</th>
                         <th style={{ padding: '1.25rem', fontWeight: '600', color: '#333', borderBottom: '1px solid #eee' }}>Status</th>
+                        <th style={{ padding: '1.25rem', fontWeight: '600', color: '#333', borderBottom: '1px solid #eee' }}>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -283,6 +294,26 @@ const AdminDashboard = () => {
                               }}>
                                 {app.status}
                               </span>
+                            </td>
+                            <td style={{ padding: '1.25rem' }}>
+                              <button
+                                onClick={() => handleDeleteApplication(app.id, app.student?.name || 'Unknown')}
+                                style={{
+                                  padding: '0.4rem 0.75rem',
+                                  borderRadius: '0.5rem',
+                                  border: '1px solid #fb2c36',
+                                  background: 'transparent',
+                                  color: '#fb2c36',
+                                  fontSize: '0.8rem',
+                                  fontWeight: '600',
+                                  cursor: 'pointer',
+                                  transition: 'all 0.3s'
+                                }}
+                                onMouseEnter={(e) => { e.target.style.background = '#fb2c36'; e.target.style.color = '#fff'; }}
+                                onMouseLeave={(e) => { e.target.style.background = 'transparent'; e.target.style.color = '#fb2c36'; }}
+                              >
+                                🗑️ Delete
+                              </button>
                             </td>
                           </tr>
                         ))

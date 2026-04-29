@@ -45,4 +45,9 @@ public class ApplicationController {
     public List<Application> getAllApplications() {
         return applicationRepository.findAll();
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteApplication(@PathVariable Long id) {
+        applicationRepository.deleteById(id);
+    }
 }
