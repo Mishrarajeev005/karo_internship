@@ -6,6 +6,7 @@ import ApplyPage from './components/ApplyPage';
 import AdminLogin from './components/AdminLogin';
 import AdminForgotPassword from './components/AdminForgotPassword';
 import AdminDashboard from './components/AdminDashboard';
+import SocialFeed from './components/SocialFeed';
 import logo from './assets/logo.png';
 
 function StudentLayout({ children }) {
@@ -56,6 +57,7 @@ function StudentLayout({ children }) {
         )}
       </nav>
       {children}
+      <SocialFeed />
     </>
   );
 }
