@@ -79,6 +79,42 @@ const AdminDashboard = () => {
     }
   };
 
+  const downloadExcel = () => {
+    if (applications.length === 0) {
+      alert('No applications to download!');
+      return;
+    }
+
+    const headers = ['S.No', 'Student Name', 'Email', 'Mobile', 'Skills', 'Internship Applied', 'Resume URL', 'LinkedIn URL', 'Status'];
+
+    const rows = applications.map((app, index) => [
+      index + 1,
+      app.student?.name || 'N/A',
+      app.student?.email || 'N/A',
+      app.student?.mobile || 'N/A',
+      app.student?.skills || 'N/A',
+      app.internship?.title || 'N/A',
+      app.student?.resumeUrl || 'N/A',
+      app.student?.linkedinUrl || 'N/A',
+      app.status || 'N/A',
+    ]);
+
+    const csvContent = [headers, ...rows]
+      .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+      .join('\n');
+
+    const BOM = '\uFEFF'; // UTF-8 BOM for Excel
+    const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `KaroStartup_Applications_${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const tabStyle = (tab) => ({
     padding: '0.75rem 1.5rem',
     borderRadius: '9999px',
@@ -226,6 +262,48 @@ const AdminDashboard = () => {
                 boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
                 border: '1px solid #eee'
               }}>
+                {/* Download Button Header */}
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '1.25rem 1.5rem',
+                  borderBottom: '1px solid #f0f0f0',
+                  background: 'rgba(251,44,54,0.02)'
+                }}>
+                  <div>
+                    <h3 style={{ fontFamily: 'Outfit', fontSize: '1.1rem', margin: 0 }}>Student Applications</h3>
+                    <p style={{ color: '#999', fontSize: '0.85rem', margin: '0.2rem 0 0' }}>{applications.length} total applications</p>
+                  </div>
+                  <button
+                    onClick={downloadExcel}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      padding: '0.65rem 1.25rem',
+                      borderRadius: '9999px',
+                      background: 'linear-gradient(135deg, #217346, #1a5c38)',
+                      color: '#fff',
+                      border: 'none',
+                      fontWeight: '700',
+                      fontSize: '0.9rem',
+                      cursor: 'pointer',
+                      boxShadow: '0 4px 12px rgba(33,115,70,0.3)',
+                      transition: 'all 0.3s',
+                      fontFamily: 'Inter, sans-serif'
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(33,115,70,0.4)'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(33,115,70,0.3)'; }}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="7 10 12 15 17 10"/>
+                      <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Download Excel
+                  </button>
+                </div>
                 <div style={{ overflowX: 'auto' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                     <thead>
