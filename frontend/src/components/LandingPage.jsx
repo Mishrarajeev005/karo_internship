@@ -61,7 +61,7 @@ function LandingPage() {
       <section className="partners-section">
         <div className="partners-container">
           <div className="partners-label">
-            <span>&#123;</span> Brands using KaroStartup <span>&#125;</span>
+            <span>&#123;</span> Our Hiring Partners <span>&#125;</span>
           </div>
           
           <div className="marquee-wrapper">
