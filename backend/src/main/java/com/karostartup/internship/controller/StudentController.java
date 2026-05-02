@@ -38,6 +38,6 @@ public class StudentController {
         Path path = Paths.get("uploads/" + fileName);
         Files.copy(file.getInputStream(), path);
         
-        return "http://localhost:8080/uploads/" + fileName;
+        return "/uploads/" + fileName;
     }
 }
