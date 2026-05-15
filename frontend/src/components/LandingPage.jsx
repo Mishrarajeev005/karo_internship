@@ -23,8 +23,7 @@ function LandingPage() {
     const fetchPartners = async () => {
       try {
         const res = await api.get('/companies');
-        // Filter out inactive companies if applicable, or just map them
-        const activePartners = res.data.filter(c => c.isActive !== false);
+        const activePartners = res.data.filter(c => c.active !== false);
         setPartners(activePartners.map(c => ({
           name: c.name,
           logo: localLogos[c.name] || c.logoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.name)}&background=random`
