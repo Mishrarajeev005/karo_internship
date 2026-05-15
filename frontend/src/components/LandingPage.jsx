@@ -30,6 +30,13 @@ function LandingPage() {
         })));
       } catch (err) {
         console.error("Failed to fetch partners", err);
+        // Fallback to dummy partners if the live backend is unreachable or blocked by CORS
+        setPartners([
+          { name: 'TechFlit', logo: techflit },
+          { name: 'EduVibe', logo: eduvibe },
+          { name: 'GreenRoot', logo: greenroot },
+          { name: 'HealthSync', logo: healthsync },
+        ]);
       }
     };
     fetchPartners();
