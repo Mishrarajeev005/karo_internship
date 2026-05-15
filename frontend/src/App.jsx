@@ -7,6 +7,7 @@ import AdminLogin from './components/AdminLogin';
 import AdminForgotPassword from './components/AdminForgotPassword';
 import AdminDashboard from './components/AdminDashboard';
 import SocialFeed from './components/SocialFeed';
+import TrackApplication from './components/TrackApplication';
 import logo from './assets/logo.png';
 
 function StudentLayout({ children }) {
@@ -23,12 +24,13 @@ function StudentLayout({ children }) {
           {/* Desktop Nav */}
           <div className="nav-links-desktop">
             <Link to="/" className="nav-pill">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
               Home
             </Link>
-            <Link to="/internships" className="nav-pill nav-pill-primary">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+            <Link to="/internships" className="nav-pill">
               Browse Internships
+            </Link>
+            <Link to="/track" className="nav-pill nav-pill-primary">
+              Track Status
             </Link>
           </div>
 
@@ -46,12 +48,13 @@ function StudentLayout({ children }) {
         {menuOpen && (
           <div className="mobile-menu">
             <Link to="/" className="mobile-menu-link" onClick={() => setMenuOpen(false)}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
               Home
             </Link>
             <Link to="/internships" className="mobile-menu-link" onClick={() => setMenuOpen(false)}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
               Browse Internships
+            </Link>
+            <Link to="/track" className="mobile-menu-link" onClick={() => setMenuOpen(false)} style={{ color: '#fb2c36', fontWeight: '700' }}>
+              Track Status
             </Link>
           </div>
         )}
@@ -70,6 +73,7 @@ function App() {
         <Route path="/" element={<StudentLayout><LandingPage /></StudentLayout>} />
         <Route path="/internships" element={<StudentLayout><InternshipsPage /></StudentLayout>} />
         <Route path="/apply/:id" element={<StudentLayout><ApplyPage /></StudentLayout>} />
+        <Route path="/track" element={<StudentLayout><TrackApplication /></StudentLayout>} />
 
         {/* Admin Pages - completely separate */}
         <Route path="/admin" element={<AdminLogin />} />

@@ -6,6 +6,7 @@ import logo from '../assets/logo.png';
 const AdminLogin = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState('admin'); // 'admin' or 'company'
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -15,17 +16,34 @@ const AdminLogin = () => {
     setError('');
     setLoading(true);
     try {
-      const res = await api.post('/admin/login', { username, password });
-      if (res.data.success) {
-        localStorage.setItem('adminLoggedIn', 'true');
-        localStorage.setItem('adminName', res.data.admin.name);
-        localStorage.setItem('adminUsername', res.data.admin.username);
-        navigate('/admin/dashboard');
+      if (role === 'admin') {
+        const res = await api.post('/admin/login', { username, password });
+        if (res.data.success) {
+          localStorage.setItem('token', res.data.token);
+          localStorage.setItem('adminLoggedIn', 'true');
+          localStorage.setItem('role', 'admin');
+          localStorage.setItem('adminName', res.data.admin.name);
+          localStorage.setItem('adminUsername', res.data.admin.username);
+          navigate('/admin/dashboard');
+        } else {
+          setError(res.data.message);
+        }
       } else {
-        setError(res.data.message);
+        // Company login (using username field as email for companies)
+        const res = await api.post('/companies/login', { email: username, password });
+        if (res.data.success) {
+          localStorage.setItem('token', res.data.token);
+          localStorage.setItem('adminLoggedIn', 'true'); // Keep this for backward compatibility
+          localStorage.setItem('role', 'company');
+          localStorage.setItem('companyId', res.data.company.id);
+          localStorage.setItem('adminName', res.data.company.name);
+          navigate('/admin/dashboard');
+        } else {
+          setError('Invalid company email or password');
+        }
       }
     } catch (err) {
-      setError('Invalid username or password');
+      setError('Invalid credentials');
     } finally {
       setLoading(false);
     }
@@ -51,8 +69,55 @@ const AdminLogin = () => {
       }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <img src={logo} alt="KaroStartup" style={{ height: '40px', marginBottom: '1rem' }} />
-          <h2 style={{ fontSize: '1.75rem', marginBottom: '0.5rem' }}>Admin Login</h2>
-          <p style={{ color: '#555', fontSize: '0.9rem' }}>Sign in to manage the portal</p>
+          <h2 style={{ fontSize: '1.75rem', marginBottom: '0.5rem' }}>Portal Login</h2>
+          <p style={{ color: '#555', fontSize: '0.9rem' }}>Sign in as Admin or Partner</p>
+        </div>
+
+        {/* Role Selector */}
+        <div style={{
+          display: 'flex',
+          background: '#f0f0f0',
+          padding: '0.3rem',
+          borderRadius: '0.75rem',
+          marginBottom: '1.5rem',
+          gap: '0.3rem'
+        }}>
+          <button
+            onClick={() => setRole('admin')}
+            style={{
+              flex: 1,
+              padding: '0.6rem',
+              borderRadius: '0.5rem',
+              border: 'none',
+              cursor: 'pointer',
+              fontWeight: '600',
+              fontSize: '0.85rem',
+              transition: 'all 0.3s',
+              background: role === 'admin' ? '#fff' : 'transparent',
+              color: role === 'admin' ? '#fb2c36' : '#666',
+              boxShadow: role === 'admin' ? '0 2px 8px rgba(0,0,0,0.05)' : 'none'
+            }}
+          >
+            Super Admin
+          </button>
+          <button
+            onClick={() => setRole('company')}
+            style={{
+              flex: 1,
+              padding: '0.6rem',
+              borderRadius: '0.5rem',
+              border: 'none',
+              cursor: 'pointer',
+              fontWeight: '600',
+              fontSize: '0.85rem',
+              transition: 'all 0.3s',
+              background: role === 'company' ? '#fff' : 'transparent',
+              color: role === 'company' ? '#fb2c36' : '#666',
+              boxShadow: role === 'company' ? '0 2px 8px rgba(0,0,0,0.05)' : 'none'
+            }}
+          >
+            Partner Company
+          </button>
         </div>
 
         {error && (
@@ -71,13 +136,15 @@ const AdminLogin = () => {
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            <label style={{ fontWeight: '600', fontSize: '0.85rem', color: '#333' }}>Username</label>
+            <label style={{ fontWeight: '600', fontSize: '0.85rem', color: '#333' }}>
+              {role === 'admin' ? 'Username' : 'Company Email'}
+            </label>
             <input
-              type="text"
+              type={role === 'admin' ? 'text' : 'email'}
               required
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter admin username"
+              placeholder={role === 'admin' ? 'Enter admin username' : 'Enter company email'}
               className="nav-pill"
               style={{ width: '100%', borderRadius: '0.75rem', padding: '0.75rem 1rem' }}
             />

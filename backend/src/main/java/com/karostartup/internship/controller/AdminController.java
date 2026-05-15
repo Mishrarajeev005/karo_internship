@@ -15,28 +15,37 @@ import java.util.Optional;
 public class AdminController {
 
     @Autowired
+    private com.karostartup.internship.security.JwtUtil jwtUtil;
+
+    @Autowired
+    private com.karostartup.internship.security.CustomUserDetailsService userDetailsService;
+
+    @Autowired
     private AdminRepository adminRepository;
+
+    @Autowired
+    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     // Login endpoint
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
         String username = credentials.get("username");
         String password = credentials.get("password");
-        System.out.println("DEBUG: Login attempt for username: " + username);
 
         Optional<Admin> adminOpt = adminRepository.findByUsername(username);
         if (adminOpt.isPresent()) {
             Admin dbAdmin = adminOpt.get();
-            System.out.println("DEBUG: User found in DB. Passwords match? " + dbAdmin.getPassword().equals(password));
-            if (dbAdmin.getPassword().equals(password)) {
+            if (passwordEncoder.matches(password, dbAdmin.getPassword())) {
+                final org.springframework.security.core.userdetails.UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                final String jwt = jwtUtil.generateToken(userDetails);
+
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", true);
                 response.put("message", "Login successful");
+                response.put("token", jwt);
                 response.put("admin", dbAdmin);
                 return ResponseEntity.ok(response);
             }
-        } else {
-            System.out.println("DEBUG: No admin user found in database with username: " + username);
         }
 
         Map<String, Object> response = new HashMap<>();
@@ -73,7 +82,7 @@ public class AdminController {
 
         if (adminOpt.isPresent()) {
             Admin admin = adminOpt.get();
-            admin.setPassword(newPassword);
+            admin.setPassword(passwordEncoder.encode(newPassword));
             adminRepository.save(admin);
             response.put("success", true);
             response.put("message", "Password has been reset successfully!");

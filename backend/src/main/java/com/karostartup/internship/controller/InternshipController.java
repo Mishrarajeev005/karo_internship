@@ -19,6 +19,11 @@ public class InternshipController {
         return internshipRepository.findAll();
     }
 
+    @GetMapping("/company/{companyId}")
+    public List<Internship> getByCompany(@PathVariable Long companyId) {
+        return internshipRepository.findByCompanyId(companyId);
+    }
+
     @PostMapping
     public Internship createInternship(@RequestBody Internship internship) {
         return internshipRepository.save(internship);

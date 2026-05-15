@@ -483,6 +483,16 @@ input, textarea, select {
   border-color: rgba(251, 44, 54, 0.1);
 }
 
+.company-logo-mini {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  margin-bottom: 1.5rem;
+  border-radius: 0.75rem;
+  background: #fdfdfd;
+  padding: 0.25rem;
+}
+
 .internship-card h3 {
   font-size: 1.7rem;
   font-weight: 800;
@@ -600,7 +610,7 @@ input, textarea, select {
 
 .partner-logo-item {
   flex-shrink: 0;
-  height: 65px;
+  height: 85px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -610,14 +620,12 @@ input, textarea, select {
   height: 100%;
   width: auto;
   object-fit: contain;
-  filter: grayscale(1);
-  opacity: 0.6;
+  filter: none;
+  opacity: 1;
   transition: all 0.3s ease;
 }
 
 .partner-logo-img:hover {
-  filter: grayscale(0);
-  opacity: 1;
   transform: scale(1.1);
 }
 
@@ -643,7 +651,7 @@ input, textarea, select {
   }
   
   .partner-logo-item {
-    height: 50px;
+    height: 65px;
   }
 }
 
@@ -695,10 +703,10 @@ input, textarea, select {
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  border: 2px solid var(--border-color);
+  border: 2px solid transparent;
   border-radius: 9999px;
-  background: var(--bg-main);
-  color: var(--text-muted);
+  background: var(--btn-gradient);
+  color: #fff;
   cursor: pointer;
   font-family: 'Inter', sans-serif;
   font-weight: 600;
@@ -707,18 +715,12 @@ input, textarea, select {
 }
 
 .sf-icon-btn:hover {
-  border-color: var(--btn-color);
-  color: var(--btn-color);
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
 }
 
 .sf-icon-btn.sf-icon-active {
-  background: var(--btn-gradient);
-  color: #fff;
-  border-color: transparent;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
 }
 
 .sf-icon-label {

@@ -1,24 +1,44 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { Link } from 'react-router-dom';
+import api from '../api';
 import techflit from '../assets/partners/techflit.png';
 import eduvibe from '../assets/partners/eduvibe.png';
 import greenroot from '../assets/partners/greenroot.png';
 import healthsync from '../assets/partners/healthsync.png';
 
+const localLogos = {
+  TechFlit: techflit,
+  EduVibe: eduvibe,
+  GreenRoot: greenroot,
+  HealthSync: healthsync
+};
+
 function LandingPage() {
-  const partners = [
-    { name: 'TechFlit', logo: techflit },
-    { name: 'EduVibe', logo: eduvibe },
-    { name: 'GreenRoot', logo: greenroot },
-    { name: 'HealthSync', logo: healthsync },
-  ];
+  const [partners, setPartners] = useState([]);
 
   const marqueeRef = useRef(null);
 
   useEffect(() => {
+    const fetchPartners = async () => {
+      try {
+        const res = await api.get('/companies');
+        // Filter out inactive companies if applicable, or just map them
+        const activePartners = res.data.filter(c => c.isActive !== false);
+        setPartners(activePartners.map(c => ({
+          name: c.name,
+          logo: localLogos[c.name] || c.logoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.name)}&background=random`
+        })));
+      } catch (err) {
+        console.error("Failed to fetch partners", err);
+      }
+    };
+    fetchPartners();
+  }, []);
+
+  useEffect(() => {
     const marquee = marqueeRef.current;
-    if (!marquee) return;
+    if (!marquee || partners.length === 0) return;
 
     const totalWidth = marquee.scrollWidth / 2;
     
@@ -39,7 +59,7 @@ function LandingPage() {
     return () => {
       gsap.killTweensOf(marquee);
     };
-  }, []);
+  }, [partners]);
 
   return (
     <>
@@ -65,13 +85,17 @@ function LandingPage() {
           </div>
           
           <div className="marquee-wrapper">
-            <div className="marquee-content" ref={marqueeRef}>
-              {[...partners, ...partners, ...partners, ...partners].map((partner, index) => (
-                <div key={index} className="partner-logo-item">
-                  <img src={partner.logo} alt={partner.name} className="partner-logo-img" title={partner.name} />
-                </div>
-              ))}
-            </div>
+            {partners.length > 0 ? (
+              <div className="marquee-content" ref={marqueeRef}>
+                {[...partners, ...partners, ...partners, ...partners].map((partner, index) => (
+                  <div key={index} className="partner-logo-item">
+                    <img src={partner.logo} alt={partner.name} className="partner-logo-img" title={partner.name} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p style={{ textAlign: 'center', color: '#64748b' }}>No active partners at the moment.</p>
+            )}
           </div>
         </div>
       </section>
