@@ -41,10 +41,12 @@ public class ApplicationController {
 
         // Notify Partner
         try {
-            String companyEmail = (internship.getCompany() != null) ? internship.getCompany().getEmail() : "admin@karostartup.com";
-            emailService.sendEmail(companyEmail, 
-                "New Application for " + internship.getTitle(), 
-                "Hi, " + student.getName() + " has applied for the " + internship.getTitle() + " internship.\nCheck your dashboard for details.");
+            if (internship != null) {
+                String companyEmail = (internship.getCompany() != null) ? internship.getCompany().getEmail() : "admin@karostartup.com";
+                emailService.sendEmail(companyEmail, 
+                    "New Application for " + internship.getTitle(), 
+                    "Hi, " + student.getName() + " has applied for the " + internship.getTitle() + " internship.\nCheck your dashboard for details.");
+            }
         } catch (Exception e) {
             System.err.println("Non-blocking error: Could not send application notification email: " + e.getMessage());
         }
@@ -60,10 +62,11 @@ public class ApplicationController {
 
         // Notify Student
         try {
-            if (app.getStudent() != null && app.getStudent().getEmail() != null) {
-                String subject = "Update on your application for " + app.getInternship().getTitle();
+            if (app.getStudent() != null && app.getStudent().getEmail() != null && app.getInternship() != null) {
+                String internshipTitle = app.getInternship().getTitle();
+                String subject = "Update on your application for " + internshipTitle;
                 String message = "Hi " + app.getStudent().getName() + ",\n\nYour application status for " + 
-                                 app.getInternship().getTitle() + " has been updated to: " + status + 
+                                 internshipTitle + " has been updated to: " + status + 
                                  ".\n\nBest regards,\nKaroStartup Team";
                 emailService.sendEmail(app.getStudent().getEmail(), subject, message);
             }
