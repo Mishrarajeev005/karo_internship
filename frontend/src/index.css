@@ -481,6 +481,7 @@ input, textarea, select {
   transform: translateY(-8px);
   box-shadow: 0 25px 50px rgba(251, 44, 54, 0.1);
   border-color: rgba(251, 44, 54, 0.1);
+  will-change: transform, box-shadow;
 }
 
 .company-logo-mini {
@@ -606,6 +607,7 @@ input, textarea, select {
   display: flex;
   gap: 6rem;
   align-items: center;
+  will-change: transform;
 }
 
 .partner-logo-item {

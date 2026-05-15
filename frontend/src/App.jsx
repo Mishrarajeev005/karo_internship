@@ -1,14 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import LandingPage from './components/LandingPage';
-import InternshipsPage from './components/InternshipsPage';
-import ApplyPage from './components/ApplyPage';
-import AdminLogin from './components/AdminLogin';
-import AdminForgotPassword from './components/AdminForgotPassword';
-import AdminDashboard from './components/AdminDashboard';
-import SocialFeed from './components/SocialFeed';
-import TrackApplication from './components/TrackApplication';
+
+const LandingPage = lazy(() => import('./components/LandingPage'));
+const InternshipsPage = lazy(() => import('./components/InternshipsPage'));
+const ApplyPage = lazy(() => import('./components/ApplyPage'));
+const AdminLogin = lazy(() => import('./components/AdminLogin'));
+const AdminForgotPassword = lazy(() => import('./components/AdminForgotPassword'));
+const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
+const SocialFeed = lazy(() => import('./components/SocialFeed'));
+const TrackApplication = lazy(() => import('./components/TrackApplication'));
 import logo from './assets/logo.png';
+
+// Loading Fallback Component
+const PageLoader = () => (
+  <div style={{ 
+    display: 'flex', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    height: '100vh', 
+    width: '100%',
+    background: '#fff',
+    flexDirection: 'column',
+    gap: '20px'
+  }}>
+    <div className="loader-spinner" style={{
+      width: '50px',
+      height: '50px',
+      border: '4px solid #f3f3f3',
+      borderTop: '4px solid #fb2c36',
+      borderRadius: '50%',
+      animation: 'spin 1s linear infinite'
+    }}></div>
+    <p style={{ color: '#666', fontSize: '1.1rem', fontWeight: '500' }}>Loading KaroStartup...</p>
+    <style>{`
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    `}</style>
+  </div>
+);
 
 function StudentLayout({ children }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -68,18 +99,20 @@ function StudentLayout({ children }) {
 function App() {
   return (
     <Router>
-      <Routes>
-        {/* Student Pages */}
-        <Route path="/" element={<StudentLayout><LandingPage /></StudentLayout>} />
-        <Route path="/internships" element={<StudentLayout><InternshipsPage /></StudentLayout>} />
-        <Route path="/apply/:id" element={<StudentLayout><ApplyPage /></StudentLayout>} />
-        <Route path="/track" element={<StudentLayout><TrackApplication /></StudentLayout>} />
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          {/* Student Pages */}
+          <Route path="/" element={<StudentLayout><LandingPage /></StudentLayout>} />
+          <Route path="/internships" element={<StudentLayout><InternshipsPage /></StudentLayout>} />
+          <Route path="/apply/:id" element={<StudentLayout><ApplyPage /></StudentLayout>} />
+          <Route path="/track" element={<StudentLayout><TrackApplication /></StudentLayout>} />
 
-        {/* Admin Pages - completely separate */}
-        <Route path="/admin" element={<AdminLogin />} />
-        <Route path="/admin/forgot-password" element={<AdminForgotPassword />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-      </Routes>
+          {/* Admin Pages - completely separate */}
+          <Route path="/admin" element={<AdminLogin />} />
+          <Route path="/admin/forgot-password" element={<AdminForgotPassword />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        </Routes>
+      </Suspense>
     </Router>
   );
 }

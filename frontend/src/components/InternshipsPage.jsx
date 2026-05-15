@@ -20,8 +20,16 @@ function InternshipsPage() {
             });
     }, []);
 
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setActiveSearch(searchTerm);
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [searchTerm]);
+
     const handleSearch = (e) => {
-        e.preventDefault();
+        if (e) e.preventDefault();
         setActiveSearch(searchTerm);
     };
 
