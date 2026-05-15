@@ -40,10 +40,14 @@ public class ApplicationController {
         Application savedApp = applicationRepository.save(app);
 
         // Notify Partner
-        String companyEmail = (internship.getCompany() != null) ? internship.getCompany().getEmail() : "admin@karostartup.com";
-        emailService.sendEmail(companyEmail, 
-            "New Application for " + internship.getTitle(), 
-            "Hi, " + student.getName() + " has applied for the " + internship.getTitle() + " internship.\nCheck your dashboard for details.");
+        try {
+            String companyEmail = (internship.getCompany() != null) ? internship.getCompany().getEmail() : "admin@karostartup.com";
+            emailService.sendEmail(companyEmail, 
+                "New Application for " + internship.getTitle(), 
+                "Hi, " + student.getName() + " has applied for the " + internship.getTitle() + " internship.\nCheck your dashboard for details.");
+        } catch (Exception e) {
+            System.err.println("Non-blocking error: Could not send application notification email: " + e.getMessage());
+        }
 
         return savedApp;
     }
@@ -55,12 +59,16 @@ public class ApplicationController {
         Application updatedApp = applicationRepository.save(app);
 
         // Notify Student
-        if (app.getStudent() != null && app.getStudent().getEmail() != null) {
-            String subject = "Update on your application for " + app.getInternship().getTitle();
-            String message = "Hi " + app.getStudent().getName() + ",\n\nYour application status for " + 
-                             app.getInternship().getTitle() + " has been updated to: " + status + 
-                             ".\n\nBest regards,\nKaroStartup Team";
-            emailService.sendEmail(app.getStudent().getEmail(), subject, message);
+        try {
+            if (app.getStudent() != null && app.getStudent().getEmail() != null) {
+                String subject = "Update on your application for " + app.getInternship().getTitle();
+                String message = "Hi " + app.getStudent().getName() + ",\n\nYour application status for " + 
+                                 app.getInternship().getTitle() + " has been updated to: " + status + 
+                                 ".\n\nBest regards,\nKaroStartup Team";
+                emailService.sendEmail(app.getStudent().getEmail(), subject, message);
+            }
+        } catch (Exception e) {
+            System.err.println("Non-blocking error: Could not send status update email: " + e.getMessage());
         }
 
         return updatedApp;
