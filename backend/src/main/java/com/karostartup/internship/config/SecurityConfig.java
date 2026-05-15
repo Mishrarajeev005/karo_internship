@@ -42,7 +42,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/applications").permitAll() 
                         .requestMatchers("/api/companies/register").hasRole("ADMIN")
                         .requestMatchers("/api/companies/*/toggle-status").hasRole("ADMIN")
-                        .requestMatchers("/api/companies").hasRole("ADMIN")
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/companies").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .anyRequest().authenticated()
                 )
