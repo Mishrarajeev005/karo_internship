@@ -32,7 +32,8 @@ public class SecurityConfig {
                     config.setAllowedOrigins(List.of(
                             "http://localhost:5173", 
                             "http://localhost:3000",
-                            "https://karo-internship.vercel.app"
+                            "https://karo-internship.vercel.app",
+                            "https://karo-internship-mishrarajeev005s-projects.vercel.app" // Added common Vercel preview/alt domain
                     ));
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
                     config.setAllowedHeaders(List.of("*"));
@@ -43,7 +44,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/login", "/api/companies/login").permitAll()
                         .requestMatchers("/api/admin/verify-username", "/api/admin/reset-password").permitAll()
                         .requestMatchers("/api/internships", "/api/internships/**").permitAll() 
-                        .requestMatchers("/api/applications").permitAll() 
+                        .requestMatchers("/api/applications", "/api/applications/**").permitAll() 
                         .requestMatchers("/api/companies/register").hasRole("ADMIN")
                         .requestMatchers("/api/companies/*/toggle-status").hasRole("ADMIN")
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/companies").permitAll()
