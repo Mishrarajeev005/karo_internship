@@ -128,6 +128,17 @@ const AdminDashboard = () => {
       alert('Failed to toggle status');
     }
   };
+  
+  const handleDeleteCompany = async (id, name) => {
+    if (!window.confirm(`Are you sure you want to completely DELETE "${name}"? This action cannot be undone.`)) return;
+    try {
+      await api.delete(`/companies/${id}`);
+      setCompanies(companies.filter(c => c.id !== id));
+      alert('Partner Company deleted successfully!');
+    } catch (error) {
+      alert('Failed to delete company');
+    }
+  };
 
   const handleDeleteInternship = async (id, title) => {
     if (!window.confirm(`Are you sure you want to delete "${title}"?`)) return;
@@ -1012,6 +1023,20 @@ const AdminDashboard = () => {
                               fontWeight: '600'
                             }}>
                             {comp.active !== false ? 'Deactivate' : 'Activate'}
+                          </button>
+                          <button 
+                            onClick={() => handleDeleteCompany(comp.id, comp.name)}
+                            style={{ 
+                              padding: '0.3rem 0.75rem', 
+                              fontSize: '0.75rem', 
+                              background: 'transparent', 
+                              color: '#fb2c36', 
+                              border: '1px solid #fb2c36', 
+                              borderRadius: '0.5rem', 
+                              cursor: 'pointer',
+                              fontWeight: '600'
+                            }}>
+                            Delete
                           </button>
                         </div>
                       </div>

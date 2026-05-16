@@ -125,4 +125,12 @@ public class CompanyController {
         }
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteCompany(@PathVariable Long id) {
+        return companyRepository.findById(id).map(company -> {
+            companyRepository.delete(company);
+            return ResponseEntity.ok().build();
+        }).orElse(ResponseEntity.notFound().build());
+    }
 }

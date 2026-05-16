@@ -93,7 +93,7 @@ const AdminLogin = () => {
           gap: '0.3rem'
         }}>
           <button
-            onClick={() => setRole('admin')}
+            onClick={() => { setRole('admin'); setError(''); }}
             style={{
               flex: 1,
               padding: '0.6rem',
@@ -111,7 +111,7 @@ const AdminLogin = () => {
             Super Admin
           </button>
           <button
-            onClick={() => setRole('company')}
+            onClick={() => { setRole('company'); setError(''); }}
             style={{
               flex: 1,
               padding: '0.6rem',
