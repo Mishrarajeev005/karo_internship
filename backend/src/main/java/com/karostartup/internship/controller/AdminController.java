@@ -111,4 +111,28 @@ public class AdminController {
         }
         return ResponseEntity.ok(response);
     }
+
+    // Update Admin Profile
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateAdmin(@PathVariable Long id, @RequestBody Map<String, String> body) {
+        Optional<Admin> adminOpt = adminRepository.findById(id);
+        Map<String, Object> response = new HashMap<>();
+
+        if (adminOpt.isPresent()) {
+            Admin admin = adminOpt.get();
+            if (body.containsKey("name")) admin.setName(body.get("name"));
+            if (body.containsKey("username")) admin.setUsername(body.get("username"));
+            if (body.containsKey("password") && !body.get("password").isEmpty()) {
+                admin.setPassword(passwordEncoder.encode(body.get("password")));
+            }
+            adminRepository.save(admin);
+            response.put("success", true);
+            response.put("message", "Profile updated successfully!");
+            response.put("admin", admin);
+        } else {
+            response.put("success", false);
+            response.put("message", "Admin not found.");
+        }
+        return ResponseEntity.ok(response);
+    }
 }

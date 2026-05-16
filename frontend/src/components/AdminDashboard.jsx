@@ -30,6 +30,12 @@ const AdminDashboard = () => {
   const [selectedCompany, setSelectedCompany] = useState(null); // For editing
   const [showEditCompanyForm, setShowEditCompanyForm] = useState(false);
   const [showPartnerPassword, setShowPartnerPassword] = useState(false);
+  const [profileFormData, setProfileFormData] = useState({
+    name: localStorage.getItem('adminName') || '',
+    username: role === 'admin' ? (localStorage.getItem('adminUsername') || '') : (localStorage.getItem('companyEmail') || ''),
+    password: ''
+  });
+  const [showProfilePassword, setShowProfilePassword] = useState(false);
 
   useEffect(() => {
     // Check if logged in
@@ -72,6 +78,8 @@ const AdminDashboard = () => {
     localStorage.removeItem('adminLoggedIn');
     localStorage.removeItem('adminName');
     localStorage.removeItem('adminUsername');
+    localStorage.removeItem('adminId');
+    localStorage.removeItem('companyEmail');
     localStorage.removeItem('role');
     localStorage.removeItem('companyId');
     navigate('/admin');
@@ -130,6 +138,37 @@ const AdminDashboard = () => {
     }
   };
   
+  const handleUpdateProfile = async (e) => {
+    e.preventDefault();
+    try {
+      const id = role === 'admin' ? localStorage.getItem('adminId') : localStorage.getItem('companyId');
+      const endpoint = role === 'admin' ? `/admin/${id}` : `/companies/${id}`;
+      
+      const payload = {
+        name: profileFormData.name,
+        password: profileFormData.password
+      };
+      if (role === 'admin') payload.username = profileFormData.username;
+      else {
+        payload.email = profileFormData.username;
+        // Also include other company fields to avoid nulling them out if required by backend
+        // Note: Our CompanyController.java updateCompany handles partial updates mostly but it's safer.
+      }
+
+      const res = await api.put(endpoint, payload);
+      if (res.data.success || res.status === 200) {
+        alert('Profile updated successfully!');
+        localStorage.setItem('adminName', profileFormData.name);
+        if (role === 'admin') localStorage.setItem('adminUsername', profileFormData.username);
+        else localStorage.setItem('companyEmail', profileFormData.username);
+        setProfileFormData({ ...profileFormData, password: '' });
+        window.location.reload(); // Refresh to update navbar and state
+      }
+    } catch (error) {
+      alert('Failed to update profile');
+    }
+  };
+
   const handleDeleteCompany = async (id, name) => {
     if (!window.confirm(`Are you sure you want to completely DELETE "${name}"? This action cannot be undone.`)) return;
     try {
@@ -526,6 +565,9 @@ const AdminDashboard = () => {
             }}
           >
              Post New Internship
+          </button>
+          <button style={tabStyle('settings')} onClick={() => { setActiveTab('settings'); setShowPostForm(false); setShowCompanyForm(false); }}>
+             Settings
           </button>
         </div>
 
@@ -1062,6 +1104,76 @@ const AdminDashboard = () => {
                     ))}
                   </div>
                 )}
+              </div>
+            )}
+
+            {/* Settings Tab */}
+            {activeTab === 'settings' && (
+              <div style={{
+                background: '#fff',
+                padding: '2.5rem',
+                borderRadius: '1.5rem',
+                border: '1px solid #eee',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
+                maxWidth: '600px'
+              }}>
+                <h3 style={{ fontFamily: 'Outfit', fontSize: '1.5rem', marginBottom: '1.5rem' }}>Account Settings</h3>
+                <form onSubmit={handleUpdateProfile} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                    <label style={{ fontWeight: '600', fontSize: '0.9rem', color: '#333' }}>Full Name</label>
+                    <input type="text" required value={profileFormData.name}
+                      onChange={(e) => setProfileFormData({...profileFormData, name: e.target.value})}
+                      placeholder="Enter full name"
+                      style={inputStyle}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                    <label style={{ fontWeight: '600', fontSize: '0.9rem', color: '#333' }}>
+                      {role === 'admin' ? 'Username' : 'Company Email'}
+                    </label>
+                    <input type={role === 'admin' ? 'text' : 'email'} required value={profileFormData.username}
+                      onChange={(e) => setProfileFormData({...profileFormData, username: e.target.value})}
+                      placeholder={role === 'admin' ? "Enter username" : "Enter company email"}
+                      style={inputStyle}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                    <label style={{ fontWeight: '600', fontSize: '0.9rem', color: '#333' }}>New Password (leave blank to keep current)</label>
+                    <div style={{ position: 'relative' }}>
+                      <input
+                        type={showProfilePassword ? "text" : "password"}
+                        value={profileFormData.password}
+                        onChange={(e) => setProfileFormData({...profileFormData, password: e.target.value})}
+                        placeholder="Min 6 characters"
+                        style={{ ...inputStyle, paddingRight: '3rem' }}
+                      />
+                      <button 
+                        type="button" 
+                        onClick={() => setShowProfilePassword(!showProfilePassword)}
+                        style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#666' }}
+                      >
+                        {showProfilePassword ? 
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg> : 
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        }
+                      </button>
+                    </div>
+                  </div>
+                  <button type="submit" style={{
+                    padding: '0.9rem',
+                    borderRadius: '9999px',
+                    background: 'linear-gradient(135deg, #fb2c36, #e51d27)',
+                    color: '#fff',
+                    fontWeight: '700',
+                    fontSize: '1rem',
+                    border: 'none',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 15px rgba(251,44,54,0.3)',
+                    marginTop: '0.5rem'
+                  }}>
+                    Save Changes
+                  </button>
+                </form>
               </div>
             )}
           </>

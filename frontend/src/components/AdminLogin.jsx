@@ -33,6 +33,7 @@ const AdminLogin = () => {
           localStorage.setItem('role', 'admin');
           localStorage.setItem('adminName', res.data.admin.name);
           localStorage.setItem('adminUsername', res.data.admin.username);
+          localStorage.setItem('adminId', res.data.admin.id);
           navigate('/admin/dashboard');
         } else {
           setError(res.data.message || 'Invalid admin credentials');
@@ -46,6 +47,7 @@ const AdminLogin = () => {
           localStorage.setItem('role', 'company');
           localStorage.setItem('companyId', res.data.company.id);
           localStorage.setItem('adminName', res.data.company.name);
+          localStorage.setItem('companyEmail', res.data.company.email);
           navigate('/admin/dashboard');
         } else {
           setError('Invalid company email or password');
