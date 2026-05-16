@@ -20,9 +20,12 @@ const AdminLogin = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('adminLoggedIn');
     localStorage.removeItem('role');
+    const cleanUsername = username.trim();
+    const cleanPassword = password.trim();
+
     try {
       if (role === 'admin') {
-        const res = await api.post('/admin/login', { username, password });
+        const res = await api.post('/admin/login', { username: cleanUsername, password: cleanPassword });
         if (res.data.success) {
           localStorage.setItem('token', res.data.token);
           localStorage.setItem('adminLoggedIn', 'true');
@@ -31,14 +34,14 @@ const AdminLogin = () => {
           localStorage.setItem('adminUsername', res.data.admin.username);
           navigate('/admin/dashboard');
         } else {
-          setError(res.data.message);
+          setError(res.data.message || 'Invalid admin credentials');
         }
       } else {
-        // Company login (using username field as email for companies)
-        const res = await api.post('/companies/login', { email: username, password });
+        // Company login (using email, case-insensitive)
+        const res = await api.post('/companies/login', { email: cleanUsername.toLowerCase(), password: cleanPassword });
         if (res.data.success) {
           localStorage.setItem('token', res.data.token);
-          localStorage.setItem('adminLoggedIn', 'true'); // Keep this for backward compatibility
+          localStorage.setItem('adminLoggedIn', 'true');
           localStorage.setItem('role', 'company');
           localStorage.setItem('companyId', res.data.company.id);
           localStorage.setItem('adminName', res.data.company.name);
@@ -48,7 +51,8 @@ const AdminLogin = () => {
         }
       }
     } catch (err) {
-      setError('Invalid credentials');
+      console.error('Login error:', err);
+      setError(err.response?.data?.message || 'Invalid credentials. Please check your email/password.');
     } finally {
       setLoading(false);
     }

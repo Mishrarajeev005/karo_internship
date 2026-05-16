@@ -34,7 +34,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
 
         // Try to find in Company (using email as username)
-        Optional<Company> company = companyRepository.findByEmail(username);
+        Optional<Company> company = companyRepository.findByEmailIgnoreCase(username);
         if (company.isPresent()) {
             return new User(company.get().getEmail(), company.get().getPassword(),
                     Collections.singletonList(new SimpleGrantedAuthority("ROLE_COMPANY")));

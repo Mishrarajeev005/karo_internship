@@ -43,7 +43,7 @@ public class CompanyController {
         String email = credentials.get("email");
         String password = credentials.get("password");
 
-        Optional<Company> companyOpt = companyRepository.findByEmail(email);
+        Optional<Company> companyOpt = companyRepository.findByEmailIgnoreCase(email);
         if (companyOpt.isPresent() && passwordEncoder.matches(password, companyOpt.get().getPassword())) {
             final org.springframework.security.core.userdetails.UserDetails userDetails = userDetailsService.loadUserByUsername(email);
             final String jwt = jwtUtil.generateToken(userDetails);
