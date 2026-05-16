@@ -498,13 +498,14 @@ input, textarea, select {
 }
 
 .company-logo-mini {
-  width: 50px;
-  height: 50px;
+  width: 120px;
+  height: 60px;
   object-fit: contain;
   margin-bottom: 1.5rem;
   border-radius: 0.75rem;
-  background: #fdfdfd;
-  padding: 0.25rem;
+  background: #fff;
+  padding: 0.5rem;
+  border: 1px solid #f1f5f9;
 }
 
 .internship-card h3 {
@@ -638,15 +639,19 @@ input, textarea, select {
 
 .partner-logo-item {
   flex-shrink: 0;
-  height: 85px;
+  height: 60px;
+  width: 150px;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0 1rem;
 }
 
 .partner-logo-img {
-  height: 100%;
+  max-height: 100%;
+  max-width: 100%;
   width: auto;
+  height: auto;
   object-fit: contain;
   filter: none;
   opacity: 1;
