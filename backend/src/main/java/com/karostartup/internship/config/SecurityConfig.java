@@ -42,7 +42,8 @@ public class SecurityConfig {
                 }))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/admin/login", "/api/companies/login").permitAll()
-                        .requestMatchers("/api/admin/verify-username", "/api/admin/reset-password").permitAll()
+                        .requestMatchers("/api/admin/verify-username", "/api/admin/forgot-username", "/api/admin/reset-password").permitAll()
+                        .requestMatchers("/api/companies/verify-email", "/api/companies/reset-password").permitAll()
                         .requestMatchers("/api/internships", "/api/internships/**").permitAll() 
                         .requestMatchers("/api/applications", "/api/applications/**").permitAll() 
                         .requestMatchers("/api/companies/register").hasRole("ADMIN")
