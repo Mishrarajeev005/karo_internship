@@ -91,4 +91,38 @@ public class CompanyController {
             return ResponseEntity.ok(companyRepository.save(company));
         }).orElse(ResponseEntity.notFound().build());
     }
+
+    // Verify company email
+    @PostMapping("/verify-email")
+    public ResponseEntity<?> verifyEmail(@RequestBody Map<String, String> body) {
+        String email = body.get("email");
+        Optional<Company> companyOpt = companyRepository.findByEmailIgnoreCase(email);
+        Map<String, Object> response = new HashMap<>();
+        if (companyOpt.isPresent()) {
+            response.put("success", true);
+        } else {
+            response.put("success", false);
+            response.put("message", "No company account found with this email.");
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    // Reset company password
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> body) {
+        String email = body.get("email");
+        String newPassword = body.get("newPassword");
+        Optional<Company> companyOpt = companyRepository.findByEmailIgnoreCase(email);
+        Map<String, Object> response = new HashMap<>();
+        if (companyOpt.isPresent()) {
+            Company company = companyOpt.get();
+            company.setPassword(passwordEncoder.encode(newPassword));
+            companyRepository.save(company);
+            response.put("success", true);
+        } else {
+            response.put("success", false);
+            response.put("message", "Company not found.");
+        }
+        return ResponseEntity.ok(response);
+    }
 }

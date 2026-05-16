@@ -92,4 +92,23 @@ public class AdminController {
         }
         return ResponseEntity.ok(response);
     }
+
+    // Forgot Username
+    @PostMapping("/forgot-username")
+    public ResponseEntity<?> forgotUsername(@RequestBody Map<String, String> body) {
+        String name = body.get("name");
+        Optional<Admin> adminOpt = adminRepository.findAll().stream()
+                .filter(a -> a.getName().equalsIgnoreCase(name))
+                .findFirst();
+
+        Map<String, Object> response = new HashMap<>();
+        if (adminOpt.isPresent()) {
+            response.put("success", true);
+            response.put("username", adminOpt.get().getUsername());
+        } else {
+            response.put("success", false);
+            response.put("message", "No admin account found with this name.");
+        }
+        return ResponseEntity.ok(response);
+    }
 }
