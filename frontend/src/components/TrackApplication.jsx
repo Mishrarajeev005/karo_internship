@@ -101,16 +101,7 @@ const TrackApplication = () => {
                             </div>
                         ) : (
                             applications.map(app => (
-                                <div key={app.id} style={{ 
-                                    background: '#fff', 
-                                    padding: '1.5rem', 
-                                    borderRadius: '1.25rem', 
-                                    boxShadow: '0 4px 12px rgba(0,0,0,0.03)',
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    border: '1px solid #f1f5f9'
-                                }}>
+                                <div key={app.id} className="track-card">
                                     <div>
                                         <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#1e293b' }}>{app.internship?.title}</h3>
                                         <p style={{ margin: '0.3rem 0 0', color: '#fb2c36', fontWeight: '600' }}>

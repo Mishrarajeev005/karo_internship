@@ -69,15 +69,7 @@ function ApplyPage() {
 
     return (
         <main className="container" style={{ padding: '3rem 1rem', minHeight: '80vh' }}>
-            <div style={{
-                maxWidth: '550px',
-                margin: '0 auto',
-                background: '#fff',
-                borderRadius: '1.5rem',
-                padding: '2.5rem 2rem',
-                boxShadow: '0 10px 40px rgba(0,0,0,0.06)',
-                border: '1px solid #eee'
-            }}>
+            <div className="form-card">
                 <h1 style={{ marginBottom: '0.5rem', fontSize: '1.8rem' }}>Submit <span className="text-gradient">Application</span></h1>
                 <p style={{ color: '#555', marginBottom: '2rem', fontSize: '0.95rem' }}>Applying for Internship #{id}</p>
                 

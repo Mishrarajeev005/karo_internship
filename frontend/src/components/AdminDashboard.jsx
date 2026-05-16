@@ -325,10 +325,42 @@ const AdminDashboard = () => {
             content: attr(data-label);
             font-weight: 700;
             text-transform: uppercase;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #64748b;
+            margin-right: 1rem;
+            min-width: 100px;
+            text-align: left;
           }
         }
+
+        .status-select {
+          appearance: none;
+          -webkit-appearance: none;
+          padding: 0.5rem 1rem;
+          border-radius: 999px;
+          border: none;
+          font-weight: 700;
+          font-size: 0.75rem;
+          text-transform: uppercase;
+          cursor: pointer;
+          transition: all 0.2s;
+          text-align: center;
+          width: fit-content;
+          min-width: 120px;
+          outline: none;
+          box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .status-select:hover {
+          filter: brightness(0.95);
+          transform: translateY(-1px);
+        }
+
+        .status-select.pending { background: #f1f5f9; color: #64748b; }
+        .status-select.shortlisted { background: #dbeafe; color: #2563eb; }
+        .status-select.interview { background: #fef3c7; color: #d97706; }
+        .status-select.hired { background: #dcfce7; color: #16a34a; }
+        .status-select.rejected { background: #fee2e2; color: #dc2626; }
 
         .status-badge {
           padding: 0.4rem 0.8rem;
@@ -687,95 +719,12 @@ const AdminDashboard = () => {
                                 )}
                               </td>
                               <td data-label="Status">
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', minWidth: '160px' }}>
-                                  <span className="status-badge" style={{ 
-                                    background: app.status === 'REJECTED' ? 'rgba(239,68,68,0.1)' : (app.status === 'HIRED' ? 'rgba(34,197,94,0.1)' : (app.status === 'SHORTLISTED' ? 'rgba(59,130,246,0.1)' : 'rgba(148,163,184,0.1)')), 
-                                    color: app.status === 'REJECTED' ? '#ef4444' : (app.status === 'HIRED' ? '#16a34a' : (app.status === 'SHORTLISTED' ? '#2563eb' : '#64748b')), 
-                                    textAlign: 'center',
-                                    width: 'fit-content',
-                                    padding: '0.4rem 0.8rem'
-                                  }}>
-                                    {app.status}
-                                  </span>
-                                  
-                                  {/* Quick Action Buttons */}
-                                  <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
-                                    <button 
-                                      disabled={updatingStatusId === app.id || app.status === 'SHORTLISTED'}
-                                      onClick={() => handleUpdateStatus(app.id, 'SHORTLISTED')}
-                                      style={{
-                                        padding: '0.35rem 0.6rem',
-                                        borderRadius: '0.4rem',
-                                        border: '1px solid #2563eb',
-                                        background: app.status === 'SHORTLISTED' ? '#2563eb' : 'transparent',
-                                        color: app.status === 'SHORTLISTED' ? '#fff' : '#2563eb',
-                                        fontSize: '0.7rem',
-                                        fontWeight: '700',
-                                        cursor: 'pointer',
-                                        opacity: updatingStatusId === app.id ? 0.5 : 1,
-                                        transition: 'all 0.2s'
-                                      }}
-                                      title="Shortlist Candidate"
-                                    >
-                                      {updatingStatusId === app.id && app.status !== 'SHORTLISTED' ? '...' : 'Shortlist'}
-                                    </button>
-                                    
-                                    <button 
-                                      disabled={updatingStatusId === app.id || app.status === 'HIRED'}
-                                      onClick={() => handleUpdateStatus(app.id, 'HIRED')}
-                                      style={{
-                                        padding: '0.35rem 0.6rem',
-                                        borderRadius: '0.4rem',
-                                        border: '1px solid #16a34a',
-                                        background: app.status === 'HIRED' ? '#16a34a' : 'transparent',
-                                        color: app.status === 'HIRED' ? '#fff' : '#16a34a',
-                                        fontSize: '0.7rem',
-                                        fontWeight: '700',
-                                        cursor: 'pointer',
-                                        opacity: updatingStatusId === app.id ? 0.5 : 1,
-                                        transition: 'all 0.2s'
-                                      }}
-                                      title="Hire Candidate"
-                                    >
-                                      {updatingStatusId === app.id && app.status !== 'HIRED' ? '...' : 'Hired'}
-                                    </button>
-
-                                    <button 
-                                      disabled={updatingStatusId === app.id || app.status === 'REJECTED'}
-                                      onClick={() => handleUpdateStatus(app.id, 'REJECTED')}
-                                      style={{
-                                        padding: '0.35rem 0.6rem',
-                                        borderRadius: '0.4rem',
-                                        border: '1px solid #ef4444',
-                                        background: app.status === 'REJECTED' ? '#ef4444' : 'transparent',
-                                        color: app.status === 'REJECTED' ? '#fff' : '#ef4444',
-                                        fontSize: '0.7rem',
-                                        fontWeight: '700',
-                                        cursor: 'pointer',
-                                        opacity: updatingStatusId === app.id ? 0.5 : 1,
-                                        transition: 'all 0.2s'
-                                      }}
-                                      title="Reject Candidate"
-                                    >
-                                      {updatingStatusId === app.id && app.status !== 'REJECTED' ? '...' : 'Reject'}
-                                    </button>
-                                  </div>
-
+                                <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
                                   <select
                                     value={app.status}
                                     onChange={(e) => handleUpdateStatus(app.id, e.target.value)}
-                                    style={{
-                                      padding: '0.3rem',
-                                      borderRadius: '0.4rem',
-                                      border: '1px solid #cbd5e1',
-                                      fontSize: '0.65rem',
-                                      fontWeight: '600',
-                                      background: '#f8fafc',
-                                      outline: 'none',
-                                      color: '#64748b',
-                                      cursor: 'pointer',
-                                      width: '100%'
-                                    }}
+                                    disabled={updatingStatusId === app.id}
+                                    className={`status-select ${app.status?.toLowerCase()}`}
                                   >
                                     <option value="PENDING">Pending</option>
                                     <option value="SHORTLISTED">Shortlisted</option>
@@ -783,6 +732,9 @@ const AdminDashboard = () => {
                                     <option value="HIRED">Hired</option>
                                     <option value="REJECTED">Rejected</option>
                                   </select>
+                                  {updatingStatusId === app.id && (
+                                    <span style={{ marginLeft: '0.5rem', fontSize: '0.8rem', color: '#94a3b8' }}>...</span>
+                                  )}
                                 </div>
                               </td>
                               <td data-label="Actions">

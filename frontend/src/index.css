@@ -266,6 +266,19 @@ h1, h2, h3, h4, h5, h6 {
   flex-wrap: wrap;
 }
 
+@media (max-width: 768px) {
+  .hero {
+    padding: 3rem 0;
+  }
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+  .hero p {
+    font-size: 1rem;
+    padding: 0 1rem;
+  }
+}
+
 /* ===================== */
 /*  ABOUT SECTION        */
 /* ===================== */
@@ -552,7 +565,20 @@ input, textarea, select {
 
 @media (max-width: 1024px) {
   .internship-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .internship-grid {
     grid-template-columns: 1fr;
+  }
+  .internship-card {
+    padding: 1.5rem;
+    border-radius: 1.5rem;
+  }
+  .internship-card h3 {
+    font-size: 1.4rem;
   }
 }
 /* ===================== */
@@ -1253,5 +1279,60 @@ input, textarea, select {
 
   .sf-feed-section {
     border-radius: 1rem;
+  }
+}
+
+/* Responsive Forms & Containers */
+.form-card {
+  max-width: 550px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 1.5rem;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+  border: 1px solid #eee;
+}
+
+@media (max-width: 640px) {
+  .form-card {
+    padding: 1.5rem 1rem;
+    border-radius: 1rem;
+  }
+  .search-btn-text {
+    display: none;
+  }
+}
+
+/* Track Status Mobile Layout */
+.track-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 1.25rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  border: 1px solid #f1f5f9;
+}
+
+@media (max-width: 640px) {
+  .track-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+  .track-card > div:last-child {
+    text-align: left !important;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+/* Utils */
+.mobile-hide {
+  @media (max-width: 768px) {
+    display: none !important;
   }
 }
