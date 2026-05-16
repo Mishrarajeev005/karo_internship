@@ -15,6 +15,11 @@ const AdminLogin = () => {
     e.preventDefault();
     setError('');
     setLoading(true);
+    
+    // Clear old tokens to prevent interference
+    localStorage.removeItem('token');
+    localStorage.removeItem('adminLoggedIn');
+    localStorage.removeItem('role');
     try {
       if (role === 'admin') {
         const res = await api.post('/admin/login', { username, password });
@@ -143,7 +148,10 @@ const AdminLogin = () => {
               type={role === 'admin' ? 'text' : 'email'}
               required
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => {
+                setUsername(e.target.value);
+                if (error) setError('');
+              }}
               placeholder={role === 'admin' ? 'Enter admin username' : 'Enter company email'}
               className="nav-pill"
               style={{ width: '100%', borderRadius: '0.75rem', padding: '0.75rem 1rem' }}
@@ -156,7 +164,10 @@ const AdminLogin = () => {
               type="password"
               required
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (error) setError('');
+              }}
               placeholder="Enter password"
               className="nav-pill"
               style={{ width: '100%', borderRadius: '0.75rem', padding: '0.75rem 1rem' }}
